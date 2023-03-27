@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/cn-lxy/music-api/tools"
+	tools "github.com/cn-lxy/music-api/tools/db"
 )
 
 type User struct {

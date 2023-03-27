@@ -31,7 +31,7 @@ Content-Type: application/json
     "password": "password"
 }
 
-### test get play list api
-### "/playlist"
-GET http://localhost:8000/playlist HTTP/1.1
-Authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MX0.tjVEMiS5O2yNzclwLdaZ-FuzrhyqOT7UwM9Hfc0ZQ8Q"
+### test token is valid
+### "/restricted"
+GET http://localhost:8000/restricted HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODAxNDk1NDUsImlkIjoxLCJuaWNrbmFtZSI6IkRhdmUifQ.QI3Tmf_-5YIyaeP6-6rm_20yWV7etvuASkg591GFUFo

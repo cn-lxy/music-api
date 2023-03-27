@@ -1,4 +1,4 @@
-package tools
+package db
 
 import (
 	"database/sql"
@@ -6,6 +6,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/cn-lxy/music-api/tools/config"
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -24,11 +25,11 @@ func init() {
 // Initialize the database connection pool.
 func dbInit() {
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8",
-		Cfg.Db.UserName,
-		Cfg.Db.Password,
-		Cfg.Db.Host,
-		Cfg.Db.Port,
-		Cfg.Db.Name)
+		config.Cfg.Db.UserName,
+		config.Cfg.Db.Password,
+		config.Cfg.Db.Host,
+		config.Cfg.Db.Port,
+		config.Cfg.Db.Name)
 	log.Println(dsn)
 	var err error
 	pool, err = sql.Open("mysql", dsn)

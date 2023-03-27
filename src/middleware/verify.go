@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"github.com/cn-lxy/music-api/tools"
+	"github.com/cn-lxy/music-api/tools/jwt"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -15,7 +15,7 @@ func VerifyMiddleware(c *fiber.Ctx) error {
 	// get token from header
 	token := c.Get("token")
 	// verify token
-	id, err := tools.VerifyToken(token)
+	id, err := jwt.VerifyToken(token)
 	if err != nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"code": c.Status(fiber.StatusUnauthorized),

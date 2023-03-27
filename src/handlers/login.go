@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"github.com/cn-lxy/music-api/models"
-	"github.com/cn-lxy/music-api/tools"
+	"github.com/cn-lxy/music-api/tools/jwt"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -68,7 +68,7 @@ func LoginHandler(c *fiber.Ctx) error {
 		})
 	}
 	// generate JWT token
-	token, err := tools.GenerateToken(user.Id)
+	token, err := jwt.GenerateToken(user)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"code": c.Status(fiber.StatusInternalServerError),

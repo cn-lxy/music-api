@@ -1,27 +1,33 @@
-package tools
+package jwt
 
 import (
 	"fmt"
 	"log"
+	"time"
 
-	"github.com/golang-jwt/jwt"
+	"github.com/cn-lxy/music-api/models"
+	"github.com/golang-jwt/jwt/v4"
 )
 
 // This package have function tools of generate jwt token, verify jwt token.
 
 // GenerateToken generate jwt token
-func GenerateToken(id uint64) (string, error) {
-	// create a signer for rsa 256
-	t := jwt.New(jwt.SigningMethodHS256)
-	// set claims
-	claims := t.Claims.(jwt.MapClaims)
-	claims["id"] = id
-	// generate encoded token and send it as response.
-	token, err := t.SignedString([]byte("secret"))
+func GenerateToken(u *models.User) (string, error) {
+	// Create the Claims
+	claims := jwt.MapClaims{
+		"id":       u.Id,
+		"nickname": u.NickName,
+		"exp":      time.Now().Add(time.Hour * 72).Unix(), // 72 hours expiration
+	}
+	// Create token with claims
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	// Generate encoded token
+	tokenString, err := token.SignedString([]byte("secret"))
 	if err != nil {
+		log.Println(err.Error())
 		return "", err
 	}
-	return token, nil
+	return tokenString, nil
 }
 
 // VerifyToken verify jwt token
