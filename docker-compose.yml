@@ -20,7 +20,7 @@ services:
     tty: true
     networks:
       - backend
-    restart: always                                     # 指定容器退出后的重启策略为始终重启
+    # restart: always                                     # 指定容器退出后的重启策略为始终重启
   
   mysql:
     build:
@@ -36,4 +36,13 @@ services:
       - "${MYSQL_PORT}:3306"
     networks:
       - backend
-    restart: always
+    # restart: always
+  
+  ncm:
+    build:
+      context: ./ncm
+    ports:
+      - "${NCM_PORT}:3000"
+    networks:
+      - backend
+    # restart: always

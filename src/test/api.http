@@ -1,2 +1,37 @@
 ### "/"
 GET http://localhost:8000 HTTP/1.1
+
+### "/register"
+POST http://localhost:8000/register HTTP/1.1
+Content-Type: application/json
+
+{
+    "id": 0,
+    "nickName": "Jhon",
+    "email": "dave@example.com",
+    "password": "password"
+}
+
+### test login api use nickname and password
+### "/login"
+POST http://localhost:8000/login?t=nickname HTTP/1.1
+Content-Type: application/json
+
+{
+    "nickname": "Jhon",
+    "password": "password"
+}
+
+### test login api use email and password
+POST http://localhost:8000/login?t=email HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "dave@example.com",
+    "password": "password"
+}
+
+### test get play list api
+### "/playlist"
+GET http://localhost:8000/playlist HTTP/1.1
+Authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MX0.tjVEMiS5O2yNzclwLdaZ-FuzrhyqOT7UwM9Hfc0ZQ8Q"

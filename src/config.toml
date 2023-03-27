@@ -1,0 +1,15 @@
+[app]
+name = "music-api"
+author = "lxy"
+email = "longxinyu2021@163.com"
+version = "0.1.0"
+
+[server]
+port = 8000
+
+[db]
+name = "music"
+host = "127.0.0.1"
+port = 3306
+username = "root"
+password = "123456"
