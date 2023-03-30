@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"log"
+
 	"github.com/cn-lxy/music-api/models"
 	"github.com/cn-lxy/music-api/tools/jwt"
 	"github.com/gofiber/fiber/v2"
@@ -22,6 +24,9 @@ type formNickName struct {
 func LoginHandler(c *fiber.Ctx) error {
 	var form any
 	t := c.Query("t")
+
+	log.Println(t)
+
 	if t == "nickname" {
 		form = &formNickName{}
 	} else if t == "email" {
@@ -48,6 +53,9 @@ func LoginHandler(c *fiber.Ctx) error {
 			"msg":  err.Error(),
 		})
 	}
+
+	log.Println(form)
+
 	if t == "nickname" {
 		if f, ok := form.(*formNickName); ok {
 			user.NickName = f.Nickname
@@ -60,10 +68,13 @@ func LoginHandler(c *fiber.Ctx) error {
 			user.Password = f.Password
 		}
 	}
+
+	log.Println(user)
+
 	// get user from database
 	if err := user.GetByEmailOrNick(); err != nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-			"code": c.Status(fiber.StatusUnauthorized),
+			"code": fiber.StatusUnauthorized,
 			"msg":  err.Error(),
 		})
 	}
@@ -71,14 +82,14 @@ func LoginHandler(c *fiber.Ctx) error {
 	token, err := jwt.GenerateToken(user)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"code": c.Status(fiber.StatusInternalServerError),
+			"code": fiber.StatusInternalServerError,
 			"msg":  err.Error(),
 		})
 	}
 
 	// return JWT token and code
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"code": c.Status(fiber.StatusOK),
+		"code": fiber.StatusOK,
 		"msg":  "success",
 		"data": fiber.Map{
 			"token": token,

@@ -10,5 +10,5 @@ func Register(app *fiber.App) {
 	app.Post("/login", handlers.LoginHandler)
 
 	app.Get("/playlist", handlers.PlaylistHandler)
-	app.Get("/restricted", handlers.RestrictedHandler)
+	app.Get("/check", handlers.CheckdHandler)
 }

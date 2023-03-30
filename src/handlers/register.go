@@ -16,14 +16,14 @@ func RegisterHandler(c *fiber.Ctx) error {
 	if err := c.BodyParser(user); err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"code": c.Status(fiber.StatusBadRequest),
+			"code": fiber.StatusBadRequest,
 			"msg":  err.Error(),
 		})
 	}
 	// insert user into database
 	if err := user.Insert(); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"code": c.Status(fiber.StatusInternalServerError),
+			"code": fiber.StatusInternalServerError,
 			"msg":  err.Error(),
 		})
 	}
@@ -32,14 +32,14 @@ func RegisterHandler(c *fiber.Ctx) error {
 	token, err := jwt.GenerateToken(user)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"code": c.Status(fiber.StatusInternalServerError),
+			"code": fiber.StatusInternalServerError,
 			"msg":  err.Error(),
 		})
 	}
 
 	// return JWT token and code
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
-		"code": c.Status(fiber.StatusCreated),
+		"code": fiber.StatusCreated,
 		"msg":  "success",
 		"data": fiber.Map{
 			"token": token,

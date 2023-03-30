@@ -33,5 +33,5 @@ Content-Type: application/json
 
 ### test token is valid
 ### "/restricted"
-GET http://localhost:8000/restricted HTTP/1.1
+GET http://localhost:8000/check HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODAxNDk1NDUsImlkIjoxLCJuaWNrbmFtZSI6IkRhdmUifQ.QI3Tmf_-5YIyaeP6-6rm_20yWV7etvuASkg591GFUFo

@@ -8,12 +8,12 @@ networks:
 # 服务容器配置
 services:
   golang:
+    volumes:                                            # 设置挂在目录
+      - ${CODE_PATH_HOST}:/usr/src/code                 # 引用 .env配置文件中`CODE_PATH_HOST`变量，将宿主机上的代码存放的目录改在到容器中 `/usr/src/code` 目录下
     build:
       context: ./golang                                 # 指定构建使用的Dockerfile文件
     environment:
       - TZ=${TZ}                                        # 设置环境变量
-    volumes:                                            # 设置挂在目录
-      - ${CODE_PATH_HOST}:/usr/src/code                 # 引用 .env配置文件中`CODE_PATH_HOST`变量，将宿主机上的代码存放的目录改在到容器中 `/usr/src/code` 目录下
     ports:                                              # 端口映射
       - "${API_PORT}:8000"
     stdin_open: true                                    # 开启标准输入，可接受外部输入

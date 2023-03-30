@@ -5,6 +5,9 @@ LABEL maintainer="lxy <longxinyu2021@163.com>"
 ENV GO111MODULE=on
 ENV GOPROXY=https://goproxy.cn,direct
 
+# 设置工作目录
+WORKDIR /usr/src/code
+
 # 安装必要的软件包和依赖包
 # USER root
 # RUN sed -i 's/deb.debian.org/mirrors.tuna.tsinghua.edu.cn/' /etc/apt/sources.list && \
@@ -23,15 +26,12 @@ ENV GOPROXY=https://goproxy.cn,direct
 ENV PATH $GOPATH/bin:$PATH
 
 # 清理垃圾
-USER root
+# USER root
 # RUN apt-get clean && \
 #     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
 #     rm /var/log/lastlog /var/log/faillog
 
-# 设置工作目录
-WORKDIR /usr/src/code
-
-
-CMD go build -o ./build/main main.go
+# RUN go build -o ./build/main ./main.go
 EXPOSE 8000
-ENTRYPOINT  ["./build/main"]
+# ENTRYPOINT  ["go build -o ./build/main ./main.go"]
+# CMD ["./build/main"]
