@@ -11,4 +11,5 @@ func Register(app *fiber.App) {
 
 	app.Get("/playlist", handlers.PlaylistHandler)
 	app.Get("/check", handlers.CheckdHandler)
+	app.Get("/playlist", handlers.PlaylistHandler)
 }
