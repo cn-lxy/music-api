@@ -8,8 +8,9 @@ import (
 func Register(app *fiber.App) {
 	app.Post("/register", handlers.RegisterHandler)
 	app.Post("/login", handlers.LoginHandler)
-
-	app.Get("/playlist", handlers.PlaylistHandler)
 	app.Get("/check", handlers.CheckdHandler)
-	app.Get("/playlist", handlers.PlaylistHandler)
+
+	app.Get("/playlist", handlers.PlaylistHandler)              // 获取用户所有歌单
+	app.Post("/playlist", handlers.CreatePlaylistHandler)       // 创建歌单
+	app.Delete("/playlist/:id", handlers.DeletePlaylistHandler) // 删除歌单
 }

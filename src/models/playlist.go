@@ -19,23 +19,39 @@ type Playlist struct {
 // Insert playlist into the database
 // only insert the name, create_user_id
 func (p *Playlist) Insert() error {
-	err := tools.Update("INSERT INTO playlist (name, create_user_id) VALUES (?, ?)", p.Name, p.CreateUserId)
+	if p.CreateUserId == 0 && p.Name == "" {
+		return fmt.Errorf("insufficient required parameters")
+	}
+	res, err := tools.Query("SELECT id FROM playlist WHERE name =? AND create_user_id =?", p.Name, p.CreateUserId)
+	if err != nil {
+		return err
+	}
+	if len(res) != 0 {
+		return fmt.Errorf("this playlist is existed")
+	}
+	err = tools.Update("INSERT INTO playlist (name, create_user_id) VALUES (?, ?)", p.Name, p.CreateUserId)
 	return err
 }
 
 // Update playlist in the database
 func (p *Playlist) Update() error {
-	err := tools.Update("UPDATE playlist SET name =?, create_user_id =?, create_time =?, update_time =?, play_count =? WHERE id =?", p.Name, p.CreateUserId, p.CreateTime, p.UpdateTime, p.PlayCount, p.Id)
+	if p.Id == 0 && p.CreateUserId == 0 {
+		return fmt.Errorf("insufficient required parameters")
+	}
+	err := tools.Update("UPDATE playlist SET name =?, play_count =? WHERE id =?", p.Name, p.PlayCount, p.Id)
 	return err
 }
 
 // Delete playlist from the database
 func (p *Playlist) Delete() error {
+	if p.CreateUserId == 0 && p.Id == 0 {
+		return fmt.Errorf("insufficient required parameters")
+	}
 	// make sure the playlist exists
 	if !p.Exists() {
 		return fmt.Errorf("playlist with id %v does not exist", p.Id)
 	}
-	err := tools.Update("DELETE FROM playlist WHERE id =?", p.Id)
+	err := tools.Update("DELETE FROM playlist WHERE id =? and create_user_id =?", p.Id, p.CreateUserId)
 	return err
 }
 
