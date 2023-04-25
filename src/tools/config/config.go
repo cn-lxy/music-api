@@ -10,6 +10,7 @@ type Config struct {
 	App    app
 	Server server
 	Db     db
+	Mongo  mongo
 }
 
 type app struct {
@@ -29,6 +30,15 @@ type db struct {
 	Name     string
 	UserName string
 	Password string
+}
+
+type mongo struct {
+	Db         string
+	Collection string
+	Host       string
+	Port       uint64
+	Username   string
+	Password   string
 }
 
 const cfgFilePath string = "./config.toml"

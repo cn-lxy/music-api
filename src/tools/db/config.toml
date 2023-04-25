@@ -9,8 +9,8 @@ port = 8000
 
 [db]
 name = "music"
-host = "mysql" # mysql,
-port = 3306
+host = "127.0.0.1" # mysql,
+port = 3307
 username = "root"
 password = "123456"
 
