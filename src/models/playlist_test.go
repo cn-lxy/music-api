@@ -49,7 +49,7 @@ func TestPlaylistExits(t *testing.T) {
 	pl := &Playlist{
 		Id: 1,
 	}
-	if pl.Exists() {
+	if pl.exists() {
 		log.Println("exists")
 	} else {
 		log.Fatal("not exists")
@@ -70,7 +70,7 @@ func TestPlaylistDelete(t *testing.T) {
 	pl := &Playlist{
 		Id: 1,
 	}
-	if ok := pl.Exists(); ok != true {
+	if ok := pl.exists(); ok != true {
 		log.Fatal("this playlist not exists")
 	} else {
 		if err := pl.Delete(); err != nil {

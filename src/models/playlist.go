@@ -19,7 +19,7 @@ type Playlist struct {
 // Insert playlist into the database
 // only insert the name, create_user_id
 func (p *Playlist) Insert() error {
-	if p.CreateUserId == 0 && p.Name == "" {
+	if p.CreateUserId == 0 || p.Name == "" {
 		return fmt.Errorf("insufficient required parameters")
 	}
 	res, err := tools.Query("SELECT id FROM playlist WHERE name =? AND create_user_id =?", p.Name, p.CreateUserId)
@@ -30,6 +30,14 @@ func (p *Playlist) Insert() error {
 		return fmt.Errorf("this playlist is existed")
 	}
 	err = tools.Update("INSERT INTO playlist (name, create_user_id) VALUES (?, ?)", p.Name, p.CreateUserId)
+	if err != nil {
+		return err
+	}
+	resId, err := tools.Query("SELECT id FROM playlist WHERE name =? AND create_user_id =?", p.Name, p.CreateUserId)
+	if err != nil {
+		return err
+	}
+	p.Id, _ = strconv.ParseUint(resId[0]["id"].(string), 10, 64)
 	return err
 }
 
@@ -44,11 +52,11 @@ func (p *Playlist) Update() error {
 
 // Delete playlist from the database
 func (p *Playlist) Delete() error {
-	if p.CreateUserId == 0 && p.Id == 0 {
+	if p.CreateUserId == 0 || p.Id == 0 {
 		return fmt.Errorf("insufficient required parameters")
 	}
 	// make sure the playlist exists
-	if !p.Exists() {
+	if !p.exists() {
 		return fmt.Errorf("playlist with id %v does not exist", p.Id)
 	}
 	err := tools.Update("DELETE FROM playlist WHERE id =? and create_user_id =?", p.Id, p.CreateUserId)
@@ -56,8 +64,8 @@ func (p *Playlist) Delete() error {
 }
 
 // Check if a playlist exists in the database
-func (p *Playlist) Exists() bool {
-	res, err := tools.Query("SELECT id FROM playlist WHERE id = ?", p.Id)
+func (p *Playlist) exists() bool {
+	res, err := tools.Query("SELECT id FROM playlist WHERE id = ? AND create_user_id = ?", p.Id, p.CreateUserId)
 	if err != nil {
 		return false
 	}
@@ -66,7 +74,10 @@ func (p *Playlist) Exists() bool {
 
 // Get a playlist from the database
 func (p *Playlist) Get() error {
-	res, err := tools.Query("SELECT id, name, create_user_id, create_time, update_time, play_count FROM playlist WHERE id = ?", p.Id)
+	if p.CreateUserId == 0 || p.Id == 0 {
+		return fmt.Errorf("insufficient required parameters")
+	}
+	res, err := tools.Query("SELECT id, name, create_user_id, create_time, update_time, play_count FROM playlist WHERE id = ? AND create_user_id = ?", p.Id, p.CreateUserId)
 	if err != nil {
 		return err
 	}

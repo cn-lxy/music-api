@@ -1,0 +1,73 @@
+### GET /playlist
+### not login
+GET http://localhost:8000/playlist HTTP/1.1
+
+### GET /playlist
+### Invalid or expired JWT
+GET http://localhost:8000/playlist HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ1.eyJleHAiOjE2ODI4Mzc4OTQsImlkIjoyLCJuaWNrbmFtZSI6Ikpob24ifQ.4Y2vNcpptiWnH5XqNodAlizzmq06D0Mxcx71r2pSg3Q
+
+### GET /playlist
+### valid token
+GET http://localhost:8000/playlist HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODI4Mzc4OTQsImlkIjoyLCJuaWNrbmFtZSI6Ikpob24ifQ.4Y2vNcpptiWnH5XqNodAlizzmq06D0Mxcx71r2pSg3Q
+
+### POST /playlist
+### create playlist
+### no token
+POST http://localhost:8000/playlist HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "playlist1",
+}
+
+### POST /playlist
+### create playlist
+### valid token
+POST http://localhost:8000/playlist HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODI4Mzc4OTQsImlkIjoyLCJuaWNrbmFtZSI6Ikpob24ifQ.4Y2vNcpptiWnH5XqNodAlizzmq06D0Mxcx71r2pSg3Q
+Content-Type: application/json
+
+{
+    "name": "playlist1"
+}
+
+### DELETE /playlist
+### delete playlist
+### no token
+DELETE http://localhost:8000/playlist/4 HTTP/1.1
+
+### DELETE /playlist
+### delete playlist
+### valid token
+DELETE http://localhost:8000/playlist/12 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODI4Mzc4OTQsImlkIjoyLCJuaWNrbmFtZSI6Ikpob24ifQ.4Y2vNcpptiWnH5XqNodAlizzmq06D0Mxcx71r2pSg3Q
+
+### PUT /playlist/:id
+### add song to playlist
+### no token
+PUT http://localhost:8000/playlist/6 HTTP/1.1
+Content-Type: application/json
+
+### PUT /playlist/:id
+### add song to playlist
+### valid token
+PUT http://localhost:8000/playlist/13 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODI4Mzc4OTQsImlkIjoyLCJuaWNrbmFtZSI6Ikpob24ifQ.4Y2vNcpptiWnH5XqNodAlizzmq06D0Mxcx71r2pSg3Q
+Content-Type: application/json
+
+{
+    "songId": 1
+}
+
+### GET /playlist
+### get playlist all song id
+### no token [PASS]
+GET http://localhost:8000/playlist/13 HTTP/1.1 
+
+### GET /playlist
+### get playlist all song id
+### valid token [PASS]
+GET http://localhost:8000/playlist/13 HTTP/1.1 
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODI4Mzc4OTQsImlkIjoyLCJuaWNrbmFtZSI6Ikpob24ifQ.4Y2vNcpptiWnH5XqNodAlizzmq06D0Mxcx71r2pSg3Q

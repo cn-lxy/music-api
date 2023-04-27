@@ -50,12 +50,24 @@ func CreatePlaylistHandler(c *fiber.Ctx) error {
 		})
 	}
 
-	// 创建歌单并写入数据库
+	// 创建歌单并写入MySQL数据库并在MogoDB中创建歌单
 	pl := models.Playlist{
 		CreateUserId: id,
 		Name:         body.Name,
 	}
 	if err := pl.Insert(); err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"code": fiber.StatusInternalServerError,
+			"msg":  "create playlist fail.",
+		})
+	}
+	plIds := models.PlaylistSongIds{
+		PlaylistId: pl.Id,
+	}
+	log.Println(plIds)
+	if err := plIds.CreatePlaylistSongIds(); err != nil {
+		log.Println(err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"code": fiber.StatusInternalServerError,
 			"msg":  "create playlist fail.",
@@ -89,11 +101,22 @@ func DeletePlaylistHandler(c *fiber.Ctx) error {
 			"msg":  "query param of id' value is unallowed",
 		})
 	}
+
+	// 从MySQL和MongoDB中删除歌单
 	pl := models.Playlist{
 		Id:           pid,
 		CreateUserId: id,
 	}
 	if err := pl.Delete(); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"code": fiber.StatusInternalServerError,
+			"msg":  "delete playlist failed",
+		})
+	}
+	plIds := models.PlaylistSongIds{
+		PlaylistId: pid,
+	}
+	if err := plIds.DeletePlaylistSongIds(); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"code": fiber.StatusInternalServerError,
 			"msg":  "delete playlist failed",
