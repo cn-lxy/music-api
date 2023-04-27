@@ -15,9 +15,9 @@ username = "root"
 password = "123456"
 
 [mongo]
-db = "test"
-collection = "demo"
-host = "127.0.0.1"
+db = "music"
+collection = "playlist"
+host = "mongo"
 port = 27017
-username = "root"
+username = "admin"
 password = "123456"
