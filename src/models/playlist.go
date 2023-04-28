@@ -8,12 +8,12 @@ import (
 )
 
 type Playlist struct {
-	Id           uint64
-	Name         string
-	CreateUserId uint64
-	CreateTime   string
-	UpdateTime   string
-	PlayCount    uint64
+	Id           uint64 `json:"id"`
+	Name         string `json:"name"`
+	CreateUserId uint64 `json:"createUserId"`
+	CreateTime   string `json:"createTime"`
+	UpdateTime   string `json:"updateTime"`
+	PlayCount    uint64 `json:"playCount"`
 }
 
 // Insert playlist into the database
