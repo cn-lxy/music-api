@@ -19,7 +19,7 @@ func PlaylistSongIdsGetIdsHandler(c *fiber.Ctx) error {
 
 	// 获取路由中的ID
 	pid, err := strconv.ParseUint(c.Params("id", "0"), 10, 64)
-	if err != nil {
+	if err != nil || pid == 0 {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"code": fiber.StatusBadRequest,
 			"msg":  "id error",

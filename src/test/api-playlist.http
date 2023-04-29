@@ -30,7 +30,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODI4Mzc4O
 Content-Type: application/json
 
 {
-    "name": "playlist1"
+    "name": "playlist2"
 }
 
 ### DELETE /playlist
@@ -69,5 +69,5 @@ GET http://localhost:8000/playlist/13 HTTP/1.1
 ### GET /playlist
 ### get playlist all song id
 ### valid token [PASS]
-GET http://localhost:8000/playlist/13 HTTP/1.1 
+GET http://localhost:8000/playlist/14 HTTP/1.1 
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODI4Mzc4OTQsImlkIjoyLCJuaWNrbmFtZSI6Ikpob24ifQ.4Y2vNcpptiWnH5XqNodAlizzmq06D0Mxcx71r2pSg3Q

@@ -81,6 +81,9 @@ func (p *Playlist) Get() error {
 	if err != nil {
 		return err
 	}
+	if len(res) == 0 {
+		return fmt.Errorf("playlist with id %v does not exist", p.Id)
+	}
 	p.Id, _ = strconv.ParseUint(res[0]["id"].(string), 10, 64)
 	p.Name = res[0]["name"].(string)
 	p.CreateUserId, _ = strconv.ParseUint(res[0]["create_user_id"].(string), 10, 64)
