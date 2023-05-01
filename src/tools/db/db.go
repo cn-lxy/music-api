@@ -116,14 +116,14 @@ func Query(sqlString string, args ...any) ([]map[string]any, error) {
 }
 
 // Update database, the `update`, `insert`, and `delete` both is this function.
-func Update(sqlString string, params ...any) error {
+func Update(sqlString string, params ...any) (int64, error) {
 	result, err := pool.Exec(sqlString, params...)
 	if err != nil {
-		return err
+		return 0, err
 	}
 	rows, _ := result.RowsAffected()
 	if rows == 0 {
-		return fmt.Errorf("%s", "update error")
+		return 0, fmt.Errorf("%s", "update error")
 	}
-	return nil
+	return result.LastInsertId()
 }
