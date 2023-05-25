@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
-	tools "github.com/cn-lxy/music-api/tools/db"
+	"github.com/cn-lxy/music-api/tools/db"
 )
 
 type Playlist struct {
@@ -18,27 +18,23 @@ type Playlist struct {
 
 // Insert playlist into the database
 // only insert the name, create_user_id
-func (p *Playlist) Insert() error {
+func (p *Playlist) Insert() (int64, error) {
 	if p.CreateUserId == 0 || p.Name == "" {
-		return fmt.Errorf("insufficient required parameters")
+		return 0, fmt.Errorf("insufficient required parameters")
 	}
-	res, err := tools.Query("SELECT id FROM playlist WHERE name =? AND create_user_id =?", p.Name, p.CreateUserId)
+	res, err := db.Query("SELECT id FROM playlist WHERE name =? AND create_user_id =?", p.Name, p.CreateUserId)
 	if err != nil {
-		return err
+		return 0, err
 	}
 	if len(res) != 0 {
-		return fmt.Errorf("this playlist is existed")
+		return 0, fmt.Errorf("this playlist is existed")
 	}
-	err = tools.Update("INSERT INTO playlist (name, create_user_id) VALUES (?, ?)", p.Name, p.CreateUserId)
+	id, err := db.Update("INSERT INTO playlist (name, create_user_id) VALUES (?, ?)", p.Name, p.CreateUserId)
 	if err != nil {
-		return err
+		return 0, err
 	}
-	resId, err := tools.Query("SELECT id FROM playlist WHERE name =? AND create_user_id =?", p.Name, p.CreateUserId)
-	if err != nil {
-		return err
-	}
-	p.Id, _ = strconv.ParseUint(resId[0]["id"].(string), 10, 64)
-	return err
+	p.Id = uint64(id)
+	return id, nil
 }
 
 // Update playlist in the database
@@ -46,7 +42,7 @@ func (p *Playlist) Update() error {
 	if p.Id == 0 && p.CreateUserId == 0 {
 		return fmt.Errorf("insufficient required parameters")
 	}
-	err := tools.Update("UPDATE playlist SET name =?, play_count =? WHERE id =?", p.Name, p.PlayCount, p.Id)
+	_, err := db.Update("UPDATE playlist SET name =?, play_count =? WHERE id =?", p.Name, p.PlayCount, p.Id)
 	return err
 }
 
@@ -59,13 +55,13 @@ func (p *Playlist) Delete() error {
 	if !p.exists() {
 		return fmt.Errorf("playlist with id %v does not exist", p.Id)
 	}
-	err := tools.Update("DELETE FROM playlist WHERE id =? and create_user_id =?", p.Id, p.CreateUserId)
+	_, err := db.Update("DELETE FROM playlist WHERE id =? and create_user_id =?", p.Id, p.CreateUserId)
 	return err
 }
 
 // Check if a playlist exists in the database
 func (p *Playlist) exists() bool {
-	res, err := tools.Query("SELECT id FROM playlist WHERE id = ? AND create_user_id = ?", p.Id, p.CreateUserId)
+	res, err := db.Query("SELECT id FROM playlist WHERE id = ? AND create_user_id = ?", p.Id, p.CreateUserId)
 	if err != nil {
 		return false
 	}
@@ -77,7 +73,7 @@ func (p *Playlist) Get() error {
 	if p.CreateUserId == 0 || p.Id == 0 {
 		return fmt.Errorf("insufficient required parameters")
 	}
-	res, err := tools.Query("SELECT id, name, create_user_id, create_time, update_time, play_count FROM playlist WHERE id = ? AND create_user_id = ?", p.Id, p.CreateUserId)
+	res, err := db.Query("SELECT id, name, create_user_id, create_time, update_time, play_count FROM playlist WHERE id = ? AND create_user_id = ?", p.Id, p.CreateUserId)
 	if err != nil {
 		return err
 	}
@@ -95,7 +91,7 @@ func (p *Playlist) Get() error {
 
 // GetPlaylists get user's all playlist
 func GetPlaylists(id uint64) ([]Playlist, error) {
-	res, err := tools.Query("SELECT id, name, create_user_id, create_time, update_time, play_count FROM playlist WHERE create_user_id = ?", id)
+	res, err := db.Query("SELECT id, name, create_user_id, create_time, update_time, play_count FROM playlist WHERE create_user_id = ?", id)
 	if err != nil {
 		return nil, err
 	}

@@ -10,7 +10,7 @@ func TestPlaylistInsert(t *testing.T) {
 		Name:         "test",
 		CreateUserId: 1,
 	}
-	if err := pl.Insert(); err != nil {
+	if _, err := pl.Insert(); err != nil {
 		log.Fatal(err.Error())
 	} else {
 		log.Println("insert success")

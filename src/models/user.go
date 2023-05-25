@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strconv"
 
-	tools "github.com/cn-lxy/music-api/tools/db"
+	"github.com/cn-lxy/music-api/tools/db"
 )
 
 type User struct {
@@ -16,30 +16,27 @@ type User struct {
 }
 
 // Insert a user into the database
-func (u *User) Insert() error {
-	err := tools.Update("INSERT INTO users (nick_name, email, password) VALUES (?, ?, ?)", u.NickName, u.Email, u.Password)
-	return err
+func (u *User) Insert() (int64, error) {
+	return db.Update("INSERT INTO users (nick_name, email, password) VALUES (?, ?, ?)", u.NickName, u.Email, u.Password)
 }
 
 // Update a user in the database
-func (u *User) Update() error {
-	err := tools.Update("UPDATE users SET nick_name =?, email =?, password =? WHERE id =?", u.NickName, u.Email, u.Password, u.Id)
-	return err
+func (u *User) Update() (int64, error) {
+	return db.Update("UPDATE users SET nick_name =?, email =?, password =? WHERE id =?", u.NickName, u.Email, u.Password, u.Id)
 }
 
 // Delete a user from the database
-func (u *User) Delete() error {
+func (u *User) Delete() (int64, error) {
 	// make sure the user exists
 	if !u.Exists() {
-		return fmt.Errorf("user with id %v does not exist", u.Id)
+		return 0, fmt.Errorf("user with id %v does not exist", u.Id)
 	}
-	err := tools.Update("DELETE FROM users WHERE id =?", u.Id)
-	return err
+	return db.Update("DELETE FROM users WHERE id =?", u.Id)
 }
 
 // Check if a user exists in the database
 func (u *User) Exists() bool {
-	res, err := tools.Query("SELECT id FROM users WHERE id = ?", u.Id)
+	res, err := db.Query("SELECT id FROM users WHERE id = ?", u.Id)
 	if err != nil {
 		return false
 	}
@@ -48,7 +45,7 @@ func (u *User) Exists() bool {
 
 // Get a user from the database
 func (u *User) Get() error {
-	res, err := tools.Query("SELECT id, nick_name, email, password FROM users WHERE id = ?", u.Id)
+	res, err := db.Query("SELECT id, nick_name, email, password FROM users WHERE id = ?", u.Id)
 	if err != nil {
 		return err
 	}
@@ -64,9 +61,9 @@ func (u *User) GetByEmailOrNick() error {
 	var res []map[string]any
 	var err error
 	if u.Email != "" {
-		res, err = tools.Query("SELECT id, nick_name, email, password FROM users WHERE email = ? AND password = ?", u.Email, u.Password)
+		res, err = db.Query("SELECT id, nick_name, email, password FROM users WHERE email = ? AND password = ?", u.Email, u.Password)
 	} else if u.NickName != "" {
-		res, err = tools.Query("SELECT id, nick_name, email, password FROM users WHERE nick_name = ? AND password = ?", u.NickName, u.Password)
+		res, err = db.Query("SELECT id, nick_name, email, password FROM users WHERE nick_name = ? AND password = ?", u.NickName, u.Password)
 	}
 	if err != nil {
 		return err

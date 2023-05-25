@@ -21,11 +21,35 @@ func RegisterHandler(c *fiber.Ctx) error {
 		})
 	}
 	// insert user into database
-	if err := user.Insert(); err != nil {
+	if id, err := user.Insert(); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"code": fiber.StatusInternalServerError,
 			"msg":  err.Error(),
 		})
+	} else {
+		// 创建歌单并写入MySQL数据库并在MogoDB中创建歌单
+		pl := models.Playlist{
+			CreateUserId: uint64(id),
+			Name:         "__LIKE__",
+		}
+		if _, err := pl.Insert(); err != nil {
+			log.Println(err.Error())
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"code": fiber.StatusInternalServerError,
+				"msg":  "create playlist fail.",
+			})
+		}
+		plIds := models.PlaylistSongIds{
+			PlaylistId: pl.Id,
+		}
+		log.Println(plIds)
+		if err := plIds.CreatePlaylistSongIds(); err != nil {
+			log.Println(err.Error())
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"code": fiber.StatusInternalServerError,
+				"msg":  "create playlist fail.",
+			})
+		}
 	}
 
 	// generate JWT token

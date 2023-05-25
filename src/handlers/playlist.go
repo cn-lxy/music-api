@@ -55,7 +55,7 @@ func CreatePlaylistHandler(c *fiber.Ctx) error {
 		CreateUserId: id,
 		Name:         body.Name,
 	}
-	if err := pl.Insert(); err != nil {
+	if _, err := pl.Insert(); err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"code": fiber.StatusInternalServerError,
