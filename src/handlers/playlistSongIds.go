@@ -56,7 +56,8 @@ func PlaylistSongIdsGetIdsHandler(c *fiber.Ctx) error {
 	})
 }
 
-func PlaylistSongIdsAddSong(c *fiber.Ctx) error {
+// PlaoyListSongIdsAddSong 添加歌曲到歌单中的操作。 ?type=add为添加，?type=del为删除
+func PlaylistSongIdsUpdate(c *fiber.Ctx) error {
 	// 通过token获取用户ID
 	user := c.Locals("user").(*jwt.Token)
 	claims := user.Claims.(jwt.MapClaims)
@@ -74,6 +75,15 @@ func PlaylistSongIdsAddSong(c *fiber.Ctx) error {
 		})
 	}
 
+	// 获取查询参数
+	type_ := c.Query("type", "")
+	if type_ == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"code": fiber.StatusBadRequest,
+			"msg":  "not found query of type param",
+		})
+	}
+
 	// 解析post json表单
 	body := struct {
 		SongId uint64 `json:"songId"`
@@ -87,17 +97,30 @@ func PlaylistSongIdsAddSong(c *fiber.Ctx) error {
 	}
 	log.Println(body)
 
-	// 添加歌曲到歌单
 	psIds := models.PlaylistSongIds{
 		PlaylistId: pid,
 	}
-	if err := psIds.AddSong(body.SongId); err != nil {
-		log.Println(err)
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"code": fiber.StatusInternalServerError,
-			"msg":  "add song to playlist failed",
-		})
+
+	switch type_ {
+	// 添加歌曲到歌单
+	case "add":
+		if err := psIds.AddSong(body.SongId); err != nil {
+			log.Println(err)
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"code": fiber.StatusInternalServerError,
+				"msg":  "add song to playlist failed",
+			})
+		}
+	case "del":
+		if err := psIds.DelSong(body.SongId); err != nil {
+			log.Println(err)
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"code": fiber.StatusInternalServerError,
+				"msg":  "delete song to playlist failed",
+			})
+		}
 	}
+
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"code": fiber.StatusOK,
 		"msg":  "success",
